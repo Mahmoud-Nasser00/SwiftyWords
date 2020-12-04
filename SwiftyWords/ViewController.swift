@@ -120,6 +120,8 @@ class ViewController: UIViewController {
                 button.setTitle("MMM", for: .normal)
                 button.titleLabel?.font = UIFont.systemFont(ofSize: 35)
                 button.addTarget(self, action: #selector(letterBtnTapped(_:)), for: .touchUpInside)
+                button.layer.borderWidth = 1
+                button.layer.borderColor = UIColor.gray.cgColor
 //                button.backgroundColor = .gray
                 let frame = CGRect(x: width * column, y: height * row , width: width, height: height)
                 button.frame = frame
@@ -244,6 +246,26 @@ class ViewController: UIViewController {
                 
             }
             
+        } else {
+            let ac = UIAlertController(title: "Wrong Answer!", message: "Please try again", preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "ok", style: .cancel) { [weak self](action) in
+                guard let self = self else {return}
+                
+                self.currentAnswerTF.text = ""
+                
+                for btn in self.tappedButtons{
+                    btn.isHidden = false
+                }
+                
+                self.tappedButtons.removeAll()
+                
+                self.score == 0 ? (self.score = 0) : (self.score -= 1)
+            }
+
+            ac.addAction(okAction)
+            
+            present(ac, animated: true, completion: nil)
         }
         
         
