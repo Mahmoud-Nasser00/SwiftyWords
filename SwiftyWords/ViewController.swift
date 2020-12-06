@@ -138,7 +138,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        loadLevel(level: 1)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.loadLevel(level: 1)
+        }
+        
     }
     
     //MARK:- Functions
@@ -180,17 +183,20 @@ class ViewController: UIViewController {
             let bits = answer.components(separatedBy: "|")
             letterBits += bits
         }
-        
-        cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
-        answersLabel.text = solutionString.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        lettersBtns.shuffle()
-        
-        if lettersBtns.count == letterBits.count{
-            for i in 0..<letterBits.count{
-                lettersBtns[i].setTitle(letterBits[i], for: .normal)
+        DispatchQueue.main.async { [weak self] in
+            self?.cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
+            self?.answersLabel.text = solutionString.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            self?.lettersBtns.shuffle()
+            
+            if self?.lettersBtns.count == letterBits.count{
+                for i in 0..<letterBits.count{
+                    self?.lettersBtns[i].setTitle(letterBits[i], for: .normal)
+                }
             }
+            
         }
+        
         
         /*
         for line in lines{
